@@ -1,15 +1,15 @@
 # Amazon Rekognition Demo Scripts
 A collection of demos using Amazon Rekognition
 
-##capture.py
+## capture.py
 
-##comapare.py
+## comapare.py
 Compare two images using Rekognition
 usage
 ```
 compare.py image_1_path image_2_path
 ```
-##match.py
+## match.py
 Match an image to a collection
 usage
 ```
