@@ -47,6 +47,6 @@ if __name__ == "__main__":
     else:
         print ('Matching faces')
         for match in faceMatches:
-                print (bcolors.BLUE + 'FaceId:' + match['Face']['FaceId'])
-                print (bcolors.BLUE + 'FaceId:' + match['Face']['ExternalImageId'])
-                print (bcolors.GREEN + 'Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
+                print (bcolors.BLUE + 'FaceId: ' + match['Face']['FaceId'])
+                print (bcolors.BLUE + 'FaceId: ' + bcolors.GREEN + match['Face']['ExternalImageId'].upper())
+                print (bcolors.BLUE + 'Similarity: ' + bcolors.GREEN + "{:.2f}".format(match['Similarity']) + "%")
