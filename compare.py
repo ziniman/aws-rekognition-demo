@@ -33,7 +33,7 @@ if __name__ == "__main__":
     imageSource=open(sourceFile,'rb')
     imageTarget=open(targetFile,'rb')
 
-    response=client.compare_faces(SimilarityThreshold=50,
+    response=client.compare_faces(SimilarityThreshold=80,
                                   SourceImage={'Bytes': imageSource.read()},
                                   TargetImage={'Bytes': imageTarget.read()})
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     else:
         for faceMatch in response['FaceMatches']:
             position = faceMatch['Face']['BoundingBox']
-            confidence = str(faceMatch['Face']['Confidence'])
+            confidence = str(faceMatch['Similarity'])
             print(bcolors.GREEN + 'The faces matches with ' + confidence + '% confidence')
 
     imageSource.close()

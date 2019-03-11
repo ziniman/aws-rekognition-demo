@@ -193,7 +193,7 @@ def create_verbal_response_face(reko_response):
         sunglasses = mydict['Sunglasses']['Value']
         mustache = mydict['Mustache']['Value']
         smile = mydict['Smile']['Value']
-        if mydict['Gender']['Confidence'] > 90:
+        if mydict['Gender']['Confidence'] > 60:
             if persons == 1:
                 mystring = mystring + "The person is %s. " % (mydict['Gender']['Value'].lower())
             else:
@@ -207,7 +207,7 @@ def create_verbal_response_face(reko_response):
             if persons == 1:
                 mystring = mystring + "This is a person. "
             else:
-                mystring = mystring + "The %s person is a person. " % p.number_to_words(p.ordinal(str([i+1])))
+                mystring = mystring + "The %s person is a human. " % p.number_to_words(p.ordinal(str([i+1])))
         print "Person %d (%s):" % (i+1, colors[i][0])
         print "\tGender: %s\t(%.2f)" % (mydict['Gender']['Value'], mydict['Gender']['Confidence'])
         print "\tEyeglasses: %s\t(%.2f)" % (eyeglasses, mydict['Eyeglasses']['Confidence'])
@@ -226,10 +226,16 @@ def create_verbal_response_face(reko_response):
         mystring = mystring + "%s %s smiling. " % (he_she.capitalize(), true_false)
         print "\tEmotions:"
         j = 0
+        selected_emotion = ''
+
+        mydict['Emotions'].sort(key = my_sort, reverse=True)
+
         for emotion in mydict['Emotions']:
-            if j == 0:
-                mystring = mystring + "%s looks %s. " % (he_she.capitalize(), emotion['Type'].lower())
             print "\t\t%s\t(%.2f)" % (emotion['Type'], emotion['Confidence'])
+            if j == 0 or selected_emotion == '':
+                if emotion['Type'].lower() != 'disgusted':
+                    mystring = mystring + "%s looks %s. " % (he_she.capitalize(), emotion['Type'].lower())
+                    selected_emotion = emotion['Type'].lower()
             j += 1
         # Find bounding box for this face
         height = mydict['BoundingBox']['Height']
@@ -242,6 +248,9 @@ def create_verbal_response_face(reko_response):
             break
 
     return mystring
+
+def my_sort(e):
+  return e['Confidence']
 
 def save_image_with_bounding_boxes(encoded_image, reko_response):
     encoded_image=np.fromstring(encoded_image,np.uint8);
