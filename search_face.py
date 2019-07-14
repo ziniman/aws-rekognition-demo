@@ -36,7 +36,7 @@ def ignore_stderr():
         os.close(old_stderr)
 
 region = 'eu-west-1' # change this to switch to another AWS region
-colors = [ ['green', 0,255,0], ['blue', 255,0,0], ['red', 0,0,255], ['purple', 255,0,255], ['silver', 192,192,192], ['cyan', 0,255,255], ['orange', 255,99,71], ['white', 255,255,255], ['black', 0,0,0] ]
+colors = [ ['green', 0,255,0], ['red', 0,0,255], ['purple', 255,0,255], ['blue', 255,0,0], ['silver', 192,192,192], ['cyan', 0,255,255], ['orange', 255,99,71], ['white', 255,255,255], ['black', 0,0,0] ]
 
 reko = boto3.client('rekognition', region_name=region)
 
@@ -47,7 +47,7 @@ def take_photo(save=False):
     sleep(2)
     with ignore_stderr():
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
-        cam = cv2.VideoCapture(0)
+        cam = cv2.VideoCapture(1)
         cv2.namedWindow("Preview")
 
     img_counter = 0
@@ -113,6 +113,7 @@ def reko_search_faces(image_bytes, collection_id):
         #print json.dumps(response, sort_keys=True, indent=4)
         return response
     except:
+        print ("SearchFace error")
         return False
 
 def search_faces(encoded_image, reko_response, collection_id):
@@ -140,14 +141,16 @@ def search_faces(encoded_image, reko_response, collection_id):
         face_matches = reko_search_faces(encoded_image_bytes, collection_id)
         # draw this bounding box
         if face_matches:
+            title = "No Match"
             for myfaces in face_matches['FaceMatches']:
                 if myfaces:
                     # Find bounding box for this face
                     name = myfaces['Face']['ExternalImageId']
                     confidence = myfaces['Similarity']
+                    print ("Face detaced: " + name)
                     title = '%.2f%% - %s' % (confidence, name.title())
-                    # draw this bounding box
-                    new_image = draw_bounding_box(new_image, image_width, image_height, width, height, top, left, colors[i], title)
+            # draw this bounding box
+            new_image = draw_bounding_box(new_image, image_width, image_height, width, height, top, left, colors[i], title)
         i += 1
     # write the image to a file
     cv2.imwrite('face_bounding_boxes.jpg', new_image)
