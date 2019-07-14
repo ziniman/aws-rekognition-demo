@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/python
 
 # start your camera using photobooth for a preview and to warm up the camera before running this script
 
@@ -56,7 +56,8 @@ def take_photo(save=False):
         speak("Taking a photo")
     #vidcap=cv2.VideoCapture()
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
-    cam = cv2.VideoCapture(1)
+    cam = cv2.VideoCapture(0)
+    sleep(2)
 
     cv2.namedWindow("Preview")
 
@@ -300,7 +301,7 @@ else:
     print "Use with no arguments to take a photo with the camera, or one argument to use a saved image"
     exit(-1)
 
-translate = 'fr'
+translate = 'es'
 labels=reko_detect_labels(encoded_image)
 humans, labels_response_string = create_verbal_response_labels(labels)
 print bcolors.GREEN + labels_response_string + bcolors.ENDC
@@ -325,6 +326,6 @@ if humans:
         translation = json.load(output)
         print bcolors.RED + '\n\n\nTranslated to %s' % translate
         print translation['TranslatedText']
-        speak (json.dumps(translation['TranslatedText'], ensure_ascii=False).encode('utf8'), "Celine")
+        speak (json.dumps(translation['TranslatedText'], ensure_ascii=False).encode('utf8'), "Lucia")
 else:
     print "No humans detected. Skipping facial recognition"
