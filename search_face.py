@@ -10,6 +10,7 @@ from sys import argv
 from botocore.exceptions import BotoCoreError, ClientError
 import json
 from time import sleep
+from random import randint
 
 import contextlib
 import sys
@@ -36,7 +37,7 @@ def ignore_stderr():
         os.close(old_stderr)
 
 region = 'eu-west-1' # change this to switch to another AWS region
-colors = [ ['green', 0,255,0], ['red', 0,0,255], ['purple', 255,0,255], ['blue', 255,0,0], ['silver', 192,192,192], ['cyan', 0,255,255], ['orange', 255,99,71], ['white', 255,255,255], ['black', 0,0,0] ]
+colors = [ ['green', 100,240,100], ['red', 0,0,255], ['purple', 255,0,255], ['blue', 255,0,0], ['silver', 192,192,192], ['cyan', 0,255,255], ['orange', 255,99,71], ['white', 255,255,255], ['black', 0,0,0] ]
 
 reko = boto3.client('rekognition', region_name=region)
 
@@ -47,8 +48,10 @@ def take_photo(save=False):
     sleep(2)
     with ignore_stderr():
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
-        cam = cv2.VideoCapture(1)
-        cv2.namedWindow("Preview")
+        cam = cv2.VideoCapture(0)
+        sleep(2)
+        cv2.namedWindow("Preview", cv2.WINDOW_NORMAL)
+        #cv2.namedWindow("Preview")
 
     img_counter = 0
     flag = True
@@ -108,7 +111,8 @@ def reko_search_faces(image_bytes, collection_id):
             Image={
                 'Bytes': image_bytes
             },
-            FaceMatchThreshold=70
+            FaceMatchThreshold=70,
+            MaxFaces=1
         )
         #print json.dumps(response, sort_keys=True, indent=4)
         return response
@@ -150,22 +154,33 @@ def search_faces(encoded_image, reko_response, collection_id):
                     print ("Face detaced: " + name)
                     title = '%.2f%% - %s' % (confidence, name.title())
             # draw this bounding box
-            new_image = draw_bounding_box(new_image, image_width, image_height, width, height, top, left, colors[i], title)
+            if i >= len(colors):
+                c = randint(0, len(colors)-1)
+            else:
+                c = i
+            new_image = draw_bounding_box(new_image, image_width, image_height, width, height, top, left, colors[c], title, i)
         i += 1
+        if i == 5: break
     # write the image to a file
     cv2.imwrite('face_bounding_boxes.jpg', new_image)
     os.system('open -a Preview face_bounding_boxes.jpg')
 
 # draw bounding boxe around one face
-def draw_bounding_box(cv_img, cv_img_width, cv_img_height, width, height, top, left, color, i):
+def draw_bounding_box(cv_img, cv_img_width, cv_img_height, width, height, top, left, color, title, i):
     # calculate bounding box coordinates top-left - x,y, bottom-right - x,y
     width_pixels = int(width * cv_img_width)
     height_pixels = int(height * cv_img_height)
-    left_pixel = int(left * cv_img_width)
-    top_pixel = int(top * cv_img_height)
+    left_pixel = 0 if left<0 else int(left * cv_img_width)
+    top_pixel = 0 if top<0 else int(top * cv_img_height)
     cv2.rectangle(cv_img,(left_pixel, top_pixel),(left_pixel+width_pixels, top_pixel+height_pixels),(color[1],color[2],color[3]),2)
     font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(cv_img, i, (left_pixel, top_pixel + height_pixels + 25), font, 0.7, (color[1],color[2],color[3]), 2)
+
+    if (i % 2) == 0:
+        text_location = top_pixel + height_pixels + 25
+    else:
+        text_location = top_pixel - 10
+
+    cv2.putText(cv_img, title, (left_pixel, text_location), font, 0.7, (color[1],color[2],color[3]), 2)
     return cv_img
 
 
@@ -184,6 +199,7 @@ else:
     exit(-1)
 
 collection_id = "ziniman"
+#collection_id = "visa"
 
 humans = reko_detect_faces(encoded_image)
 
