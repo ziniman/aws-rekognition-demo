@@ -59,7 +59,7 @@ def take_photo(save=False):
     cam = cv2.VideoCapture(0)
     sleep(2)
 
-    cv2.namedWindow("Preview")
+    cv2.namedWindow("Preview", cv2.WINDOW_NORMAL)
 
     img_counter = 0
     flag = True

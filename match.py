@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/python
 
 import boto3
 import os
@@ -26,8 +26,8 @@ if __name__ == "__main__":
     bucket='bucket'
     collectionId=args.collection
     fileName=args.image
-    threshold = 70
-    maxFaces=2
+    threshold = 50
+    maxFaces=1
 
     client=boto3.client('rekognition')
     os.system('open -a Preview %s' % fileName)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
                                 FaceMatchThreshold=threshold,
                                 MaxFaces=maxFaces)
 
-    #print json.dumps(response, sort_keys=True, indent=4)
+    print json.dumps(response, sort_keys=True, indent=4)
 
     faceMatches=response['FaceMatches']
     if not faceMatches:
@@ -48,5 +48,5 @@ if __name__ == "__main__":
         print ('Matching faces')
         for match in faceMatches:
                 print (bcolors.BLUE + 'FaceId: ' + match['Face']['FaceId'])
-                print (bcolors.BLUE + 'FaceId: ' + bcolors.GREEN + match['Face']['ExternalImageId'].upper())
+                print (bcolors.BLUE + 'FaceTag: ' + bcolors.GREEN + match['Face']['ExternalImageId'].upper())
                 print (bcolors.BLUE + 'Similarity: ' + bcolors.GREEN + "{:.2f}".format(match['Similarity']) + "%")

@@ -48,7 +48,7 @@ def take_photo(save=False):
     sleep(2)
     with ignore_stderr():
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
-        cam = cv2.VideoCapture(0)
+        cam = cv2.VideoCapture(1)
         sleep(2)
         cv2.namedWindow("Preview", cv2.WINDOW_NORMAL)
         #cv2.namedWindow("Preview")
