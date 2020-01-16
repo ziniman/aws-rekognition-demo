@@ -139,6 +139,11 @@ def show_custom_labels(model,bucket,photo, min_confidence):
             draw.rectangle((left,top_location, left+2 + w, top_location + h + 3), fill='white')
             draw.text((left+1,top_location), text, fill=color, font=fnt)
             logger.info(text)
+            text = '  Powered by https://aws.ai  '
+            w, h = fnt.getsize(text)
+            draw.rectangle((imgWidth-w-4, imgHeight-h-4, imgWidth, imgHeight), fill='white')
+            draw.text((imgWidth-w-3, imgHeight-h-3), text, fill='black', font=fnt)
+
 
         in_mem_file = io.BytesIO()
         image.save(in_mem_file, format=image.format)

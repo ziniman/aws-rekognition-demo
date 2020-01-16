@@ -11,6 +11,8 @@ logger.setLevel(logging.INFO)
 
 region = 'us-east-1'
 
+banned_account=['OrganicGrowMID']
+
 def lambda_handler(event, context):
 
     logger.info('Event Data: ' + json.dumps(event))
@@ -37,6 +39,9 @@ def lambda_handler(event, context):
         image_url = (item["entities"]["media"][0]["media_url"])
         item_id = (item["id_str"])
         user_id = (item["user"]["screen_name"])
+
+        if user_id in banned_account:
+            continue
 
         try:
             for user in item["entities"]["user_mentions"]:
