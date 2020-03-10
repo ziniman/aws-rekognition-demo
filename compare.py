@@ -45,7 +45,7 @@ if __name__ == "__main__":
         for faceMatch in response['FaceMatches']:
             position = faceMatch['Face']['BoundingBox']
             confidence = str(faceMatch['Similarity'])
-            print(bcolors.GREEN + 'The faces matches with ' + confidence + '% confidence')
+            print(bcolors.GREEN + 'The faces match with ' + confidence + '% confidence')
 
     imageSource.close()
     imageTarget.close()

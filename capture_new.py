@@ -57,7 +57,7 @@ def take_photo(save=False):
     #vidcap=cv2.VideoCapture()
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
     cam = cv2.VideoCapture(0)
-    sleep(2)
+    #sleep(2)
 
     cv2.namedWindow("Preview", cv2.WINDOW_NORMAL)
 
