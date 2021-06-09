@@ -20,10 +20,10 @@ Resources:
       Environment:
         Variables:
           DecryptionKeyName: 'a2c218dd-8eb2-43bf-90aa-f364c5f26a1e'
-          EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygEzFxRRQ8d0ncU5fnUmxqYBAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMqkWRdLR1IFnyhwBhAgEQgDR39nwTfBpASJqoXvSXUj95VD8sSqfrN90B4U3gpdtKJk5e51Li4SwQ0SO1ZnwgFwE92cgs'
-          EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGlefJLsNvU97DkmJ1rOcseAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAxeReqVHAuyw5qRPTgCARCATUEc+8zKxZUB0e1M9z/FYmEuAkY6kuOFXAK6RL5lLjqDR/maDYAZB3FrGaHzhbzrNDO1wZWRqJC++K9W7SJPIVDQ29yZlDxLR9UOMDbn'
-          EncryptedConsumerOAUTHTOKEN: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygH5iS5wbjqKTjvlfCjRO9vUAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAy17zgxb1NS4wrNZfACARCATYh9aJJRd6BOwh1EYn9BNrWh5gccGtsNbjFIBWf+ehs5GigD8dUl7wte6roxPpMo/m2llcvqdDs7/is09kSrDrcIfQBPr/OOoKiq9S6u'
-          EncryptedConsumerOAUTHSECRET: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygG3RHE/i3rshlwaUbAlYwRdAAAAjDCBiQYJKoZIhvcNAQcGoHwwegIBADB1BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOjopKRvZGbUugWGGAIBEIBIoAdNo2KhzaLh5pje3EwDW59+Ca9eYyHW7kXj+YchkPYLvAwPxnKJwOXlVQTDYTzb65W0mkFdVr7yEo8Qlp3hGYxtRPfnMv9W'
+          EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygH++AHN7vNFlavPEkxDFkikAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMsk8Ah5XFNArSlCL+AgEQgDTNiTRJ9+GJunbDdnubC0QGAcrLPyDwOS7Io9Ypsunx8LaWfyRBV9UouLAsWQjOMACDAjz+'
+          EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGJwFor5imEMulSxTxhz9rEAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAylqHm7Y0+Vu7xsQuwCARCATUtJbxbCrtfwAZ5gSzHvCBgXDxdpoJo5mway+a88PELTay6Nae2ffTW9q4168IYpX1recB79uyE8F+niecBg2/yU/U9+hspfyRk4bVgJ'
+          EncryptedConsumerOAUTHTOKEN: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGTpE4zTwkE9Zciw2i6GUssAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzwYXObFuRb0PizHv0CARCATU8LPo4aeBtDIoAhIh5yCVpJFYFCPLBHhKa3cXAEg7LsdYFMVndfnrmTIFSZyiDXjTefbw/gt5LON2lratWf/qx3P2R4co+esksFr57G'
+          EncryptedConsumerOAUTHSECRET: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygHu2q82gFjSgKoY/i3MFTDeAAAAjDCBiQYJKoZIhvcNAQcGoHwwegIBADB1BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDBYIT0JgSb1Do3hbAgIBEIBISMSjD64XXiA0bKEAqhZtep64djm8FtDlKaIEgAv4/ec0TFEyIeV7cuc4Fsv2iCRbx6jM7MfXtMroGqDlwgsz0xp9eCvTedrH'
       Events:
         MyS3Upload:
           Type: S3
@@ -88,9 +88,9 @@ Resources:
         # KMS key name of the key used to encrypt the Twitter Consumer API Keys. Note, this must be just the key name (UUID), not the full key ARN. It's assumed the key is owned by the same account, in the same region as the app.
         DecryptionKeyName: 'a2c218dd-8eb2-43bf-90aa-f364c5f26a1e' # Uncomment to override default value
         # Encrypted Twitter Consumer API Key encrypted ciphertext blob as a base64-encoded string.
-        EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygEzFxRRQ8d0ncU5fnUmxqYBAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMqkWRdLR1IFnyhwBhAgEQgDR39nwTfBpASJqoXvSXUj95VD8sSqfrN90B4U3gpdtKJk5e51Li4SwQ0SO1ZnwgFwE92cgs'
+        EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygH++AHN7vNFlavPEkxDFkikAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMsk8Ah5XFNArSlCL+AgEQgDTNiTRJ9+GJunbDdnubC0QGAcrLPyDwOS7Io9Ypsunx8LaWfyRBV9UouLAsWQjOMACDAjz+'
         # Encrypted Twitter Consumer API Secret Key encrypted ciphertext blob as a base64-encoded string.
-        EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGlefJLsNvU97DkmJ1rOcseAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAxeReqVHAuyw5qRPTgCARCATUEc+8zKxZUB0e1M9z/FYmEuAkY6kuOFXAK6RL5lLjqDR/maDYAZB3FrGaHzhbzrNDO1wZWRqJC++K9W7SJPIVDQ29yZlDxLR9UOMDbn'
+        EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGJwFor5imEMulSxTxhz9rEAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAylqHm7Y0+Vu7xsQuwCARCATUtJbxbCrtfwAZ5gSzHvCBgXDxdpoJo5mway+a88PELTay6Nae2ffTW9q4168IYpX1recB79uyE8F+niecBg2/yU/U9+hspfyRk4bVgJ'
         # (Optional) The level of logging desired (error, warn, info, debug or trace).
         LoggingLevel: 'debug' # Uncomment to override default value
         # Milliseconds before any given request to the Twitter API will timeout and give up.

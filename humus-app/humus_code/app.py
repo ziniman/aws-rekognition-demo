@@ -69,7 +69,6 @@ def show_custom_labels(model,bucket,photo, min_confidence):
         # Get a list of all tags
         tag_set = tags['TagSet']
 
-        # Print out each tag
         for tag in tag_set:
             if tag['Key'] == 'twitter_id':
                 twitter_id = tag['Value']
@@ -98,6 +97,7 @@ def show_custom_labels(model,bucket,photo, min_confidence):
         max_w = 0
         c = 0
         largest = 0
+        maxConfidance = 0
 
         for customLabel in response['CustomLabels']:
             print('Label ' + str(customLabel['Name']))
@@ -107,9 +107,13 @@ def show_custom_labels(model,bucket,photo, min_confidence):
                 width = imgWidth * box['Width']
 
                 if width>max_w:
-                    largest = c
                     max_w = width
+
+                if maxConfidance < customLabel['Confidence']:
+                    maxConfidance = customLabel['Confidence']
+                    largest = c
             c += 1
+
 
         customLabel = response['CustomLabels'][largest]
         logger.info('Label ' + str(customLabel['Name']))

@@ -4,7 +4,7 @@ This project contains source code and supporting files for a serverless applicat
 
 - hello_world - Code for the application's Lambda function.
 - events - Invocation events that you can use to invoke the function.
-- tests - Unit tests for the application code. 
+- tests - Unit tests for the application code.
 - template.yaml - A template that defines the application's AWS resources.
 
 The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
@@ -16,6 +16,18 @@ The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI
 * [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
 * [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
 * [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+
+## Encrypt Twitter API parameters with the AWS CLI
+Install the AWS CLI.
+
+Encrypt your Twitter Consumer API Key by running this command:
+```bash
+aws kms encrypt --key-id <key ARN> --plaintext '<Twitter Consumer API key>'
+```
+
+The result JSON will contain a field called ```CiphertextBlob```. That string value (without the double-quotes) is what should be provided into the EncryptedConsumerApiKey parameter of the serverless app.
+
+Repeat for these step for the EncryptedConsumerApiSecretKey.
 
 ## Deploy the sample application
 
