@@ -1,5 +1,6 @@
 *.jpg
 *.png
+*.log
 .DS_Store
 tmp
 compare/*

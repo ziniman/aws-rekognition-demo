@@ -1,6 +1,10 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
 
 # start your camera using photobooth for a preview and to warm up the camera before running this script
+
+import sys
+for path in sys.path:
+    print(path)
 
 import numpy as np
 import cv2
@@ -48,7 +52,7 @@ def take_photo(save=False):
     sleep(2)
     with ignore_stderr():
     # change the number of the camera that you open to cycle through different options if you have multiple connected cameras
-        cam = cv2.VideoCapture(1)
+        cam = cv2.VideoCapture(0)
         sleep(2)
         cv2.namedWindow("Preview", cv2.WINDOW_NORMAL)
         #cv2.namedWindow("Preview")
@@ -89,12 +93,12 @@ def read_image(filename):
         fin.close()
         return encoded_image_bytes
     except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print ("I/O error({0}): {1}".format(e.errno, e.strerror))
             exit(-1)
 
 # rekognition facial detection
 def reko_detect_faces(image_bytes):
-    print "Calling Amazon Rekognition: detect_faces"
+    print ("Calling Amazon Rekognition: detect_faces")
     response = reko.detect_faces(
         Image={
             'Bytes': image_bytes
@@ -104,7 +108,7 @@ def reko_detect_faces(image_bytes):
     return response
 
 def reko_search_faces(image_bytes, collection_id):
-    print "Calling Amazon Rekognition: search_faces_by_image"
+    print ("Calling Amazon Rekognition: search_faces_by_image")
     try:
         response = reko.search_faces_by_image(
             CollectionId=collection_id,
@@ -114,7 +118,7 @@ def reko_search_faces(image_bytes, collection_id):
             FaceMatchThreshold=70,
             MaxFaces=1
         )
-        #print json.dumps(response, sort_keys=True, indent=4)
+        #print (json.dumps(response, sort_keys=True, indent=4))
         return response
     except:
         print ("SearchFace error")
@@ -129,9 +133,10 @@ def search_faces(encoded_image, reko_response, collection_id):
     for mydict in reko_response['FaceDetails']:
         # Find bounding box for this face
         height = mydict['BoundingBox']['Height']
-        left = mydict['BoundingBox']['Left']
-        top = mydict['BoundingBox']['Top']
+        left = abs(mydict['BoundingBox']['Left'])
+        top = abs(mydict['BoundingBox']['Top'])
         width = mydict['BoundingBox']['Width']
+
         #crop face to new image
         width_pixels = 80 if int(width * image_width)<80 else int(width * image_width)
         height_pixels = 80  if int(height * image_height)<80 else int(height * image_height)
@@ -192,10 +197,10 @@ def draw_bounding_box(cv_img, cv_img_width, cv_img_height, width, height, top, l
 if len(argv) == 1:
     encoded_image = take_photo(save=True)
 elif len(argv) == 2:
-    print "opening image in file: ", argv[1]
+    print ("opening image in file: ", argv[1])
     encoded_image=read_image(argv[1])
 else:
-    print "Use with no arguments to take a photo with the camera, or one argument to use a saved image"
+    print ("Use with no arguments to take a photo with the camera, or one argument to use a saved image")
     exit(-1)
 
 collection_id = "ziniman"
@@ -207,4 +212,4 @@ if humans:
     search_faces(encoded_image, humans, collection_id)
 
 else:
-    print "No humans detected. Skipping facial search"
+    print ("No humans detected. Skipping facial search")

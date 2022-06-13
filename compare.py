@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/local/bin/python3
 
 import boto3
 import os
@@ -38,14 +38,18 @@ if __name__ == "__main__":
                                   TargetImage={'Bytes': imageTarget.read()})
 
     #print json.dumps(response, sort_keys=True, indent=4)
+    os.system('echo "%s">%s' % (json.dumps(response, sort_keys=True, indent=4), 'last_compare.log'))
 
     if not response['FaceMatches']:
-        print bcolors.RED + 'No Match'
+        print (bcolors.RED + 'No Match')
     else:
         for faceMatch in response['FaceMatches']:
             position = faceMatch['Face']['BoundingBox']
             confidence = str(faceMatch['Similarity'])
-            print(bcolors.GREEN + 'The faces match with ' + confidence + '% confidence')
+            if faceMatch['Similarity'] >= 85:
+               print(bcolors.GREEN + 'The faces match with ' + confidence + '% confidence')
+            else:
+               print(bcolors.YELLOW + 'The faces match with ' + confidence + '% confidence')
 
     imageSource.close()
     imageTarget.close()
