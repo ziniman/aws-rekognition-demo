@@ -8,20 +8,26 @@ import base64
 from PIL import Image, ImageDraw, ExifTags, ImageColor, ImageFont
 from twython import Twython
 
-kms = boto3.client('kms')
+#kms = boto3.client('kms')
 session = boto3.session.Session()
 
-APP_KEY = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerApiKey'])))['Plaintext']
-APP_SECRET = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerApiSecretKey'])))['Plaintext']
-OAUTH_TOKEN = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerOAUTHTOKEN'])))['Plaintext']
-OAUTH_TOKEN_SECRET = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerOAUTHSECRET'])))['Plaintext']
+#APP_KEY = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerApiKey'])))['Plaintext']
+#APP_SECRET = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerApiSecretKey'])))['Plaintext']
+#OAUTH_TOKEN = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerOAUTHTOKEN'])))['Plaintext']
+#OAUTH_TOKEN_SECRET = kms.decrypt(CiphertextBlob=bytes(base64.b64decode(os.environ['EncryptedConsumerOAUTHSECRET'])))['Plaintext']
+
+ssm = boto3.client('ssm')
+APP_KEY = ssm.get_parameter(Name='/twitter-event-source/consumer_key', WithDecryption=True)['Parameter']['Value']
+APP_SECRET = ssm.get_parameter(Name='/twitter-event-source/consumer_secret', WithDecryption=True)['Parameter']['Value']
+OAUTH_TOKEN = ssm.get_parameter(Name='/twitter-event-source/access_token', WithDecryption=True)['Parameter']['Value']
+OAUTH_TOKEN_SECRET = ssm.get_parameter(Name='/twitter-event-source/access_token_secret', WithDecryption=True)['Parameter']['Value']
 
 twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-model='arn:aws:rekognition:us-east-1:397652707012:project/Real_Humus/version/Real_Humus.2019-12-24T15.41.28/1577194888945'
+model='arn:aws:rekognition:us-east-1:397652707012:project/Real_Humus/version/Real_Humus.2020-09-03T10.29.40/1599118180517'
 min_confidence=60
 region = 'us-east-1'
 
@@ -49,9 +55,13 @@ def show_custom_labels(model,bucket,photo, min_confidence):
     client=boto3.client('rekognition', region_name=region)
 
     #Call DetectCustomLabels
+    logger.info('Calling rekognition.detect_custom_labels with model: ' + model)
+
     response = client.detect_custom_labels(Image={'S3Object': {'Bucket': bucket, 'Name': photo}},
         MinConfidence=min_confidence,
         ProjectVersionArn=model)
+
+    logger.info('RCL: ' + json.dumps(response))
 
     # Load image from S3 bucket
     s3_connection = boto3.client('s3')
@@ -73,7 +83,7 @@ def show_custom_labels(model,bucket,photo, min_confidence):
         if tag['Key'] == 'additional_users':
             additional_users = tag['Value']
 
-    if response:
+    if response['CustomLabels']:
         #s3_object = s3_connection.Object(bucket,photo)
         s3_response = s3_connection.get_object(
             Bucket=bucket,
@@ -151,16 +161,18 @@ def show_custom_labels(model,bucket,photo, min_confidence):
 
         twitter_resp = twitter.upload_media(media=in_mem_file)
         if text:
-            response = twitter.update_status(status=('@%s %sThis is what I see...\nFollow @HumusNotHumus') % (user_id, additional_users), media_ids=twitter_resp['media_id'], in_reply_to_status_id=twitter_id)
+            # response = twitter.update_status(status=('@%s %sThis is what I see...\nFollow @HumusNotHumus') % (user_id, additional_users), media_ids=twitter_resp['media_id'], in_reply_to_status_id=twitter_id)
+            response = twitter.update_status(status='This is what I see...\nFollow @HumusNotHumus', media_ids=twitter_resp['media_id'], in_reply_to_status_id=twitter_id)
         else:
-            response = twitter.update_status(status=('@%s %sSorry, no Humus here!\nFollow @HumusNotHumus') % (user_id, additional_users), media_ids=twitter_resp['media_id'], in_reply_to_status_id=twitter_id)
+            response = twitter.update_status(status='Sorry, no Humus here!\nFollow @HumusNotHumus', media_ids=twitter_resp['media_id'], in_reply_to_status_id=twitter_id)
 
         logger.info(json.dumps(response))
 
         return {'message' : 'Found labels'}
 
     else:
-        response = twitter.update_status(status=('@%s Sorry, no Humus here!\nFollow @HumusNotHumus') % (user_id), in_reply_to_status_id=twitter_id)
+        # response = twitter.update_status(status=('@%s Sorry, no Humus here!\nFollow @HumusNotHumus') % (user_id), in_reply_to_status_id=twitter_id)
+        # response = twitter.update_status(status='Sorry, no Humus here!\nFollow @HumusNotHumus', in_reply_to_status_id=twitter_id)
 
         logger.info(json.dumps(response))
 

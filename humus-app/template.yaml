@@ -17,13 +17,6 @@ Resources:
       CodeUri: humus_code/
       Handler: app.lambda_handler
       Runtime: python3.8
-      Environment:
-        Variables:
-          DecryptionKeyName: 'a2c218dd-8eb2-43bf-90aa-f364c5f26a1e'
-          EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygEzFxRRQ8d0ncU5fnUmxqYBAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMqkWRdLR1IFnyhwBhAgEQgDR39nwTfBpASJqoXvSXUj95VD8sSqfrN90B4U3gpdtKJk5e51Li4SwQ0SO1ZnwgFwE92cgs'
-          EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGlefJLsNvU97DkmJ1rOcseAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAxeReqVHAuyw5qRPTgCARCATUEc+8zKxZUB0e1M9z/FYmEuAkY6kuOFXAK6RL5lLjqDR/maDYAZB3FrGaHzhbzrNDO1wZWRqJC++K9W7SJPIVDQ29yZlDxLR9UOMDbn'
-          EncryptedConsumerOAUTHTOKEN: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygH5iS5wbjqKTjvlfCjRO9vUAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAy17zgxb1NS4wrNZfACARCATYh9aJJRd6BOwh1EYn9BNrWh5gccGtsNbjFIBWf+ehs5GigD8dUl7wte6roxPpMo/m2llcvqdDs7/is09kSrDrcIfQBPr/OOoKiq9S6u'
-          EncryptedConsumerOAUTHSECRET: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygG3RHE/i3rshlwaUbAlYwRdAAAAjDCBiQYJKoZIhvcNAQcGoHwwegIBADB1BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOjopKRvZGbUugWGGAIBEIBIoAdNo2KhzaLh5pje3EwDW59+Ca9eYyHW7kXj+YchkPYLvAwPxnKJwOXlVQTDYTzb65W0mkFdVr7yEo8Qlp3hGYxtRPfnMv9W'
       Events:
         MyS3Upload:
           Type: S3
@@ -48,6 +41,10 @@ Resources:
             - Effect: Allow
               Action:
                 - 'rekognition:DetectCustomLabels'
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter'
               Resource: '*'
   TwitterFunction:
     Type: AWS::Serverless::Function
@@ -76,23 +73,13 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location:
-        ApplicationId: arn:aws:serverlessrepo:us-east-1:771389557967:applications/TweetEventSource
-        SemanticVersion: 0.0.2
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:077246666028:applications/aws-serverless-twitter-event-source
+        SemanticVersion: 2.0.0
       Parameters:
         # Additional parameters to be added to the API call. This should be in query string format.
-        AdditionalParameters: 'result_type=recent&include_entities=true&tweet_mode=extended' # Uncomment to override default value
-        # Consumer API Key in plain text.
-        # ConsumerApiKey: '' # Uncomment to override default value
-        # Consumer API Secret Key in plain text.
-        # ConsumerApiSecretKey: '' # Uncomment to override default value
-        # KMS key name of the key used to encrypt the Twitter Consumer API Keys. Note, this must be just the key name (UUID), not the full key ARN. It's assumed the key is owned by the same account, in the same region as the app.
-        DecryptionKeyName: 'a2c218dd-8eb2-43bf-90aa-f364c5f26a1e' # Uncomment to override default value
-        # Encrypted Twitter Consumer API Key encrypted ciphertext blob as a base64-encoded string.
-        EncryptedConsumerApiKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygEzFxRRQ8d0ncU5fnUmxqYBAAAAdzB1BgkqhkiG9w0BBwagaDBmAgEAMGEGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMqkWRdLR1IFnyhwBhAgEQgDR39nwTfBpASJqoXvSXUj95VD8sSqfrN90B4U3gpdtKJk5e51Li4SwQ0SO1ZnwgFwE92cgs'
-        # Encrypted Twitter Consumer API Secret Key encrypted ciphertext blob as a base64-encoded string.
-        EncryptedConsumerApiSecretKey: 'AQICAHhkV8tL48dL+IX6njyL86HHHdhAG2Xzpk5r9+KAF71YygGlefJLsNvU97DkmJ1rOcseAAAAkjCBjwYJKoZIhvcNAQcGoIGBMH8CAQAwegYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAxeReqVHAuyw5qRPTgCARCATUEc+8zKxZUB0e1M9z/FYmEuAkY6kuOFXAK6RL5lLjqDR/maDYAZB3FrGaHzhbzrNDO1wZWRqJC++K9W7SJPIVDQ29yZlDxLR9UOMDbn'
+        #AdditionalParameters: 'result_type=recent&include_entities=true&tweet_mode=extended' # Uncomment to override default value
         # (Optional) The level of logging desired (error, warn, info, debug or trace).
-        LoggingLevel: 'debug' # Uncomment to override default value
+        # LoggingLevel: 'debug' # Uncomment to override default value
         # Milliseconds before any given request to the Twitter API will timeout and give up.
         # PerRequestTimeout: '1500' # Uncomment to override default value
         # Maximum time in seconds to spend on a single polling session.
@@ -100,9 +87,10 @@ Resources:
         # Frequency in minutes to poll for new tweets.
         PollingFrequencyInMinutes: '1'
         # Name of lambda function that should be invoked to process tweets. Note, this must be a function name and not a function ARN.
-        ProcessorFunctionName: !Ref TwitterFunction
+        TweetProcessorFunctionName: !Ref TwitterFunction
         # Search query to be passed to Twitter to select tweets to use for the event source.
-        SearchQuery: '%23humus'
+        SearchText: '#humus OR #hummus'
+        StreamModeEnabled: true
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
